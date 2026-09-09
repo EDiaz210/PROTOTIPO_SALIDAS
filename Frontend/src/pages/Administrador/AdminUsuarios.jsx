@@ -4,7 +4,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import useFetch from '../../hooks/useFetch';
 import storeAuth from '../../context/storeAuth';
 import UsuariosList from './UsuariosList';
-import Sincronizar from '../Sincronizar/Sincronizar';
 
 const AdminUsuarios = () => {
   const navigate = useNavigate();
@@ -135,8 +134,6 @@ const AdminUsuarios = () => {
               >
                 Nuevo Usuario
               </button>
-
-              <Sincronizar compact token={token} />
             </div>
 
             <UsuariosList

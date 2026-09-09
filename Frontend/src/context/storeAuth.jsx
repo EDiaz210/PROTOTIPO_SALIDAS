@@ -6,8 +6,12 @@ const storeAuth = create(
         set => ({
             token: null,
             setToken: (token) => set({ token }),
-            logout: () => set({ token: null }),
-
+            logout: () => {
+                set({ token: null });
+                if (typeof window !== 'undefined') {
+                    window.localStorage.removeItem('auth-session');
+                }
+            },
         }),
 
         { 

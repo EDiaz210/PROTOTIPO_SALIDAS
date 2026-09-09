@@ -9,7 +9,7 @@ CREATE TABLE codigos (
   requestor_area VARCHAR(100),
   detalles VARCHAR(300),
   link_referencia VARCHAR(900),
-  descripcion_sap VARCHAR(100),
+  descripcion_sap VARCHAR(150),
   nombre_solicitante varchar(50),
   comentario varchar(200),
   grava_iva VARCHAR(2) DEFAULT 'SI',

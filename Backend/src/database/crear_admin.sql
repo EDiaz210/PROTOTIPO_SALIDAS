@@ -7,7 +7,7 @@ VALUES (
     'Elkin Diaz',
     '1727660902',
     'pasante.ti@farbiopaharma.com',
-    '$2b$10$VCe.aQ1TN9jn30XU5VUyg.I0WaUajFfXoqBmCI1gs7\4oGo\P2Rpy',
+    '$2b$10$f6EqKCKF4xSVHcXXmJDh2.yJY63xGUBvlscTbPB5KXL6Weox9q7Ue',
     'administrador',
     NOW(),
     NOW()

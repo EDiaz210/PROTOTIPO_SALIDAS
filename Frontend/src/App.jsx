@@ -11,26 +11,12 @@ import Dashboard from "./layout/Dashboard";
 
 // Pages
 import Login from "./pages/Autenticación/Login";
-import TablaCodigos from "./pages/Tabla/TablaCodigos"; 
-import CodigosRechazadosCompras from "./pages/Tabla/CodigosRechazadosCompras";
-import CodigosRechazadosSolicitante from "./pages/Tabla/CodigosRechazadosSolicitante";
-import CodigosFinalizadosMaestro from "./pages/Tabla/CodigosFinalizadosMaestro";
 import AdminUsuarios from "./pages/Administrador/AdminUsuarios";
-import Sincronizar from "./pages/Sincronizar/Sincronizar";
-import AdminReportes from "./pages/Reportes/AdminReportes";
-import MisSolicitudes from "./pages/Solicitudes/MisSolicitudes";
 import CrearUsuarioPage from "./pages/Administrador/CrearUsuarioPage";
 import EditarUsuario from "./pages/Administrador/EditarUsuario";
+import SalidasDashboard from "./pages/Salidas/SalidasDashboard";
+import ValidarSalidaQR from "./pages/Salidas/ValidarSalidaQR";
 import NotFound from "./pages/NotFound";
-
-// Componentes por Rol
-import SolicitanteCrearCodigo from "./pages/Articulo/SolicitanteCrearCodigo";
-import SolicitanteEditarCodigo from "./pages/Articulo/SolicitanteEditarCodigo";
-import ComprasEditarCodigo from "./pages/Articulo/ComprasEditarCodigo";
-import ContabilidadEditarCodigo from "./pages/Articulo/ContabilidadEditarCodigo";
-import MaestroDatosEditarCodigo from "./pages/Articulo/MaestroDatosEditarCodigo";
-import ReenviarCompras from "./pages/Devoluciones/ReenviarCompras";
-import ReenviarSolicitante from "./pages/Devoluciones/ReenviarSolicitante";
 
 // 🔹 Componente para manejar el Home inteligente del Dashboard
 const DashboardHomeRedirect = () => {
@@ -38,13 +24,19 @@ const DashboardHomeRedirect = () => {
   const claims = getAuthClaims(token);
   const userRole = claims?.rol?.toLowerCase() || '';
 
-  // Si es administrador, su principal es la gestión de usuarios
   if (userRole.includes('administrador')) {
     return <Navigate to="admin/usuarios" replace />;
   }
-  
-  // Para los roles operativos (contabilidad, compras, maestrodedatos, solicitante)
-  return <Navigate to="tablas" replace />;
+
+  if (userRole.includes('supervisor')) {
+    return <Navigate to="salidas/validar" replace />;
+  }
+
+  if (userRole.includes('jefe') || userRole.includes('solicitante')) {
+    return <Navigate to="salidas" replace />;
+  }
+
+  return <Navigate to="/login" replace />;
 };
 
 function App() {
@@ -71,122 +63,27 @@ function App() {
           {/* 🔹 Redirección inteligente cuando entren directo a /dashboard */}
           <Route index element={<DashboardHomeRedirect />} />
 
-          {/* 🔹 Vista común para roles operativos */}
-          <Route path="tablas" element={<TablaCodigos />} />
-
           <Route
-            path="compras/rechazados"
+            path="salidas"
             element={
-              <PrivateRouteWithRole allowedRoles={["compras"]}>
-                <CodigosRechazadosCompras />
+              <PrivateRouteWithRole allowedRoles={["solicitante", "jefe", "administrador"]}>
+                <SalidasDashboard />
               </PrivateRouteWithRole>
             }
           />
-
           <Route
-            path="solicitante/rechazados"
+            path="salidas/validar"
             element={
-              <PrivateRouteWithRole allowedRoles={["solicitante"]}>
-                <CodigosRechazadosSolicitante />
+              <PrivateRouteWithRole allowedRoles={["supervisor", "administrador"]}>
+                <ValidarSalidaQR />
               </PrivateRouteWithRole>
             }
           />
-
-          <Route
-            path="maestro/finalizados"
-            element={
-              <PrivateRouteWithRole allowedRoles={["maestrodedatos"]}>
-                <CodigosFinalizadosMaestro />
-              </PrivateRouteWithRole>
-            }
-          />
-          
-          {/* 🔹 Rutas de Creación/Edición por Rol */}
-          {/* Solicitante: Crear Código */}
-          <Route
-            path="insumos"
-            element={
-              <PrivateRouteWithRole allowedRoles={["solicitante"]}>
-                <SolicitanteCrearCodigo />
-              </PrivateRouteWithRole>
-            }
-          />
-
-          {/* Solicitante: Editar Código */}
-          <Route
-            path="insumos/editar/:id"
-            element={
-              <PrivateRouteWithRole allowedRoles={["solicitante"]}>
-                <SolicitanteEditarCodigo />
-              </PrivateRouteWithRole>
-            }
-          />
-
-          {/* Solicitante: Reenviar desde Rechazados */}
-          <Route
-            path="solicitante/reenviar/:id"
-            element={
-              <PrivateRouteWithRole allowedRoles={["solicitante"]}>
-                <ReenviarSolicitante />
-              </PrivateRouteWithRole>
-            }
-          />
-
-          {/* Compras: Editar Código */}
-          <Route
-            path="compras/editar/:id"
-            element={
-              <PrivateRouteWithRole allowedRoles={["compras"]}>
-                <ComprasEditarCodigo />
-              </PrivateRouteWithRole>
-            }
-          />
-
-          {/* Compras: Reenviar desde Rechazados */}
-          <Route
-            path="compras/reenviar/:id"
-            element={
-              <PrivateRouteWithRole allowedRoles={["compras"]}>
-                <ReenviarCompras />
-              </PrivateRouteWithRole>
-            }
-          />
-
-          {/* Contabilidad: Editar Código */}
-          <Route
-            path="contabilidad/editar/:id"
-            element={
-              <PrivateRouteWithRole allowedRoles={["contabilidad"]}>
-                <ContabilidadEditarCodigo />
-              </PrivateRouteWithRole>
-            }
-          />
-
-          {/* Maestro de Datos: Editar Código */}
-          <Route
-            path="maestro/editar/:id"
-            element={
-              <PrivateRouteWithRole allowedRoles={["maestrodedatos"]}>
-                <MaestroDatosEditarCodigo />
-              </PrivateRouteWithRole>
-            }
-          />
-
-          <Route path="mis-solicitudes" element={<MisSolicitudes />} />
 
           {/* 🔹 Rutas para Administrador */}
           <Route path="admin/usuarios" element={<AdminUsuarios />} />
           <Route path="admin/usuarios/nuevo" element={<CrearUsuarioPage />} />
           <Route path="admin/usuarios/editar/:id" element={<EditarUsuario />} />
-          <Route
-            path="admin/sincronizar"
-            element={
-              <PrivateRouteWithRole allowedRoles={["administrador"]}>
-                <Sincronizar />
-              </PrivateRouteWithRole>
-            }
-          />
-          <Route path="admin/reportes" element={<AdminReportes />} />
         </Route>
 
         {/* 🔹 Manejo de 404 */}

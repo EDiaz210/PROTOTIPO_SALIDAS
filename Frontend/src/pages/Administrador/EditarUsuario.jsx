@@ -367,10 +367,9 @@ const EditarUsuario = () => {
                   {...register('rol', { required: 'El rol es obligatorio' })}
                 >
                   <option value="administrador">Administrador</option>
+                  <option value="jefe">Jefe</option>
                   <option value="solicitante">Solicitante</option>
-                  <option value="compras">Compras</option>
-                  <option value="contabilidad">Contabilidad</option>
-                  <option value="maestrodedatos">Maestro de Datos</option>
+                  <option value="supervisor">Supervisor</option>
                 </select>
                 {errors.rol && <p className="text-red-600 text-sm mt-1">{errors.rol.message}</p>}
               </div>

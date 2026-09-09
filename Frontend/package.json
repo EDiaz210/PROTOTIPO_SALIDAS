@@ -12,11 +12,13 @@
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@tinymce/tinymce-react": "^6.3.0",
+    "@zxing/browser": "^0.2.1",
     "aos": "^2.3.4",
     "axios": "^1.11.0",
     "date-fns": "^4.1.0",
     "file-saver": "^2.0.5",
     "framer-motion": "^12.23.12",
+    "html5-qrcode": "^2.3.8",
     "jwt-decode": "^4.0.0",
     "lucide-react": "^0.544.0",
     "qrcode.react": "^4.2.0",

@@ -163,10 +163,15 @@ const formatearUsuarioParaAuditoria = (usuario = {}) => ({
     }
 
     const { email, password, nombre, cedula, rol } = req.body;
+    const rolesPermitidos = ['administrador', 'jefe', 'solicitante', 'supervisor'];
 
     // Validar que todos los campos requeridos estén presentes
     if (!email || !password || !nombre || !cedula || !rol) {
       return res.status(400).json({ msg: "Debes llenar todos los campos requeridos: email, password, nombre, cedula, rol" });
+    }
+
+    if (!rolesPermitidos.includes(rol)) {
+      return res.status(400).json({ msg: 'El rol solo puede ser: administrador, jefe, solicitante o supervisor' });
     }
 
     // Validar que el email pertenezca a uno de los dominios permitidos
@@ -327,6 +332,11 @@ const formatearUsuarioParaAuditoria = (usuario = {}) => ({
   try {
     const { id } = req.params;
     const { nombre, cedula, email, rol, password, estado } = req.body;
+    const rolesPermitidos = ['administrador', 'jefe', 'solicitante', 'supervisor'];
+
+    if (rol && !rolesPermitidos.includes(rol)) {
+      return res.status(400).json({ msg: 'El rol solo puede ser: administrador, jefe, solicitante o supervisor' });
+    }
 
     // Validar que el usuario exista
     const [usuarioExistente] = await connection.query(
