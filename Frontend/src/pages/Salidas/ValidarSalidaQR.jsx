@@ -15,8 +15,10 @@ const ValidarSalidaQR = () => {
   const [isCameraStarting, setIsCameraStarting] = useState(false);
   const [cameraReady, setCameraReady] = useState(false);
   const [cameraPermissionGranted, setCameraPermissionGranted] = useState(false);
+  const [scanHint, setScanHint] = useState('Centra el QR dentro del marco');
   const scannerRef = useRef(null);
   const videoRef = useRef(null);
+  const isProcessingRef = useRef(false);
   const qrRegionId = 'qr-reader';
 
   const stopCamera = () => {
@@ -29,9 +31,22 @@ const ValidarSalidaQR = () => {
     scannerRef.current = null;
   };
 
+  const resetScan = () => {
+    setResult(null);
+    setError('');
+    setLoading(false);
+    setScanHint('Centra el QR dentro del marco');
+    isProcessingRef.current = false;
+    if (selectedCameraId) {
+      startCamera(selectedCameraId);
+    }
+  };
+
   const requestCameraAccess = async () => {
     setError('');
     setLoading(false);
+    setScanHint('Centra el QR dentro del marco');
+    isProcessingRef.current = false;
     setIsCameraStarting(true);
     setCameraReady(false);
 
@@ -87,6 +102,8 @@ const ValidarSalidaQR = () => {
 
     setError('');
     setLoading(false);
+    setScanHint('Centra el QR dentro del marco');
+    isProcessingRef.current = false;
     setIsCameraStarting(true);
     setCameraReady(false);
 
@@ -140,9 +157,35 @@ const ValidarSalidaQR = () => {
         requestedCameraId,
         videoElement,
         async (decodedResult, err) => {
-          if (decodedResult) {
+          if (decodedResult && !isProcessingRef.current) {
+            const points = decodedResult.getResultPoints?.() || [];
+            const videoWidth = videoElement.videoWidth || videoElement.clientWidth;
+            const videoHeight = videoElement.videoHeight || videoElement.clientHeight;
+            const pointCenter = points.length
+              ? {
+                  x: points.reduce((total, point) => total + point.getX(), 0) / points.length,
+                  y: points.reduce((total, point) => total + point.getY(), 0) / points.length,
+                }
+              : null;
+            const horizontalMargin = videoWidth * 0.2;
+            const verticalMargin = videoHeight * 0.2;
+
+            if (pointCenter && (
+              pointCenter.x < horizontalMargin
+              || pointCenter.x > videoWidth - horizontalMargin
+              || pointCenter.y < verticalMargin
+              || pointCenter.y > videoHeight - verticalMargin
+            )) {
+              setScanHint('Mueve el QR al centro del marco');
+              return;
+            }
+
+            isProcessingRef.current = true;
             setLoading(true);
+            setScanHint('QR centrado. Procesando...');
             setError('');
+            controls?.stop?.();
+            stream.getTracks().forEach((track) => track.stop());
             try {
               const raw = (() => {
                 const text = String(decodedResult.getText() || '').trim();
@@ -199,8 +242,6 @@ const ValidarSalidaQR = () => {
 
               setError('');
               setResult({ success: true, ...data });
-              controls?.stop?.();
-              stream.getTracks().forEach((track) => track.stop());
             } catch (scanError) {
               setError(scanError.message || 'No se pudo leer el QR');
               setResult({ success: false, msg: scanError.message || 'QR inválido' });
@@ -281,7 +322,7 @@ const ValidarSalidaQR = () => {
         <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
           <div
             id={qrRegionId}
-            className="relative min-h-[360px] w-full overflow-hidden rounded-2xl bg-black"
+            className="relative min-h-90 w-full overflow-hidden rounded-2xl bg-black"
             style={{ minHeight: '360px', height: '360px', width: '100%' }}
           >
             <video
@@ -292,11 +333,14 @@ const ValidarSalidaQR = () => {
               muted
               style={{ display: 'block' }}
             />
-            <div className="pointer-events-none absolute left-1/2 top-1/2 h-[240px] w-[240px] -translate-x-1/2 -translate-y-1/2 rounded-[18px] border-[2.5px] border-white bg-white/5 shadow-[0_0_0_9999px_rgba(15,23,42,0.24)] md:h-[290px] md:w-[290px]">
-              <span className="absolute -left-[2px] -top-[2px] h-7 w-7 rounded-tl-[18px] border-l-[4px] border-t-[4px] border-white" />
-              <span className="absolute -right-[2px] -top-[2px] h-7 w-7 rounded-tr-[18px] border-r-[4px] border-t-[4px] border-white" />
-              <span className="absolute -bottom-[2px] -left-[2px] h-7 w-7 rounded-bl-[18px] border-b-[4px] border-l-[4px] border-white" />
-              <span className="absolute -bottom-[2px] -right-[2px] h-7 w-7 rounded-br-[18px] border-b-[4px] border-r-[4px] border-white" />
+            <div className="pointer-events-none absolute left-1/2 top-1/2 h-60 w-60 -translate-x-1/2 -translate-y-1/2 rounded-2xl border-[2.5px] border-white bg-white/5 shadow-[0_0_0_9999px_rgba(15,23,42,0.24)] md:h-72.5 md:w-72.5">
+              <span className="absolute -left-0.5 -top-0.5 h-7 w-7 rounded-tl-[18px] border-l-4 border-t-4 border-white" />
+              <span className="absolute -right-0.5 -top-0.5 h-7 w-7 rounded-tr-[18px] border-r-4 border-t-4 border-white" />
+              <span className="absolute -bottom-0.5 -left-0.5 h-7 w-7 rounded-bl-[18px] border-b-4 border-l-4 border-white" />
+              <span className="absolute -bottom-0.5 -right-0.5 h-7 w-7 rounded-br-[18px] border-b-4 border-r-4 border-white" />
+            </div>
+            <div className="pointer-events-none absolute bottom-5 left-1/2 -translate-x-1/2 rounded-full bg-black/65 px-4 py-2 text-center text-xs font-semibold text-white backdrop-blur-sm">
+              {scanHint}
             </div>
           </div>
 
@@ -336,30 +380,29 @@ const ValidarSalidaQR = () => {
           </div>
 
           {loading ? (
-            <div className="mt-4 flex items-center gap-3 text-slate-700">
-              <LoaderCircle className="animate-spin" size={20} />
-              Validando salida...
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/55 p-4 backdrop-blur-sm">
+              <div className="flex min-h-70 w-full max-w-105 flex-col items-center justify-center rounded-3xl bg-white p-8 text-center shadow-2xl">
+                <LoaderCircle className="mb-6 animate-spin text-[#17243D]" size={76} strokeWidth={1.5} />
+                <h2 className="text-2xl font-extrabold text-slate-900">Procesando QR</h2>
+                <p className="mt-2 text-sm text-slate-500">Estamos validando los datos de la salida</p>
+              </div>
             </div>
           ) : result ? (
             <div className="mt-4 space-y-4">
               {result.success ? (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-[1px]">
-                  <div className="w-full max-w-[520px] rounded-[22px] border border-slate-200 bg-white p-5 shadow-2xl">
-                    <div className="rounded-[18px] border border-[#9ed7b9] bg-[#dff4e5] p-4 shadow-sm">
+                  <div className="w-full max-w-130 rounded-2xl border border-slate-200 bg-white p-5 shadow-2xl">
+                    <div className="rounded-2xl border border-[#9ed7b9] bg-[#dff4e5] p-4 shadow-sm">
                       <div className="flex items-center justify-between gap-3">
                         <div className="flex items-center gap-3">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#eafaf1] text-[#1e9f62]">
-                            <CheckCircle2 size={18} />
+                          <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#eafaf1] text-[#1e9f62] shadow-sm">
+                            <CheckCircle2 size={72} strokeWidth={1.8} />
                           </div>
                           <span className="text-[15px] font-extrabold uppercase tracking-[0.18em] text-[#1f3a34]">Salida aprobada</span>
                         </div>
                         <button
                           type="button"
-                          onClick={() => {
-                            setResult(null);
-                            setError('');
-                            setLoading(false);
-                          }}
+                          onClick={resetScan}
                           className="rounded-full border border-[#a7d6ba] bg-white/60 px-3 py-1.5 text-xs font-semibold text-[#1f3a34] transition hover:bg-white"
                         >
                           Volver
@@ -379,7 +422,7 @@ const ValidarSalidaQR = () => {
                     </div>
 
                     {result?.salida && (
-                      <div className="mt-5 rounded-[18px] border border-slate-200 bg-slate-50 p-4">
+                      <div className="mt-5 rounded-2xl border border-slate-200 bg-slate-50 p-4">
                         <div className="space-y-3 text-[15px] text-slate-700">
                           <div className="grid grid-cols-[120px_1fr] items-center gap-4">
                             <span className="font-medium text-slate-600">Código:</span>
@@ -412,21 +455,17 @@ const ValidarSalidaQR = () => {
                 </div>
               ) : (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/30 p-4 backdrop-blur-[1px]">
-                  <div className="w-full max-w-[520px] rounded-[20px] border border-[#f3b7b7] bg-[#fce7e7] p-5 shadow-2xl">
+                  <div className="w-full max-w-130 rounded-2xl border border-[#f3b7b7] bg-[#fce7e7] p-5 shadow-2xl">
                     <div className="flex items-center justify-between gap-3 text-[#d44d4d]">
                       <div className="flex items-center gap-3">
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[#f9d8d8]">
-                          <XCircle size={18} />
+                        <div className="flex h-28 w-28 items-center justify-center rounded-full bg-[#f9d8d8]">
+                          <XCircle size={86} strokeWidth={1.6} />
                         </div>
                         <span className="text-[15px] font-extrabold uppercase tracking-[0.18em]">QR no válido</span>
                       </div>
                       <button
                         type="button"
-                        onClick={() => {
-                          setResult(null);
-                          setError('');
-                          setLoading(false);
-                        }}
+                        onClick={resetScan}
                         className="rounded-full border border-[#e9b0b0] bg-white/60 px-3 py-1.5 text-xs font-semibold text-[#b14f4f] transition hover:bg-white"
                       >
                         Volver

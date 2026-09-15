@@ -118,7 +118,7 @@ const Dashboard = () => {
     <div className="flex h-screen font-sans flex-col md:flex-row bg-gray-50" style={{ fontFamily: "Gowun Batang, serif" }}>
       
       {/* HEADER MÓVIL */}
-      <div className="md:hidden flex items-center justify-between bg-gray-100 border-b border-gray-300 px-4 py-2 flex-shrink-0">
+      <div className="md:hidden flex items-center justify-between bg-gray-100 border-b border-gray-300 px-4 py-2 shrink-0">
         <img 
           src="/logo.png" 
           alt="Farbiopharma" 
@@ -286,7 +286,7 @@ const Dashboard = () => {
       </aside>
       
       {/* CONTENIDO PRINCIPAL */}
-      <main className={`flex-1 min-h-screen overflow-y-auto bg-gradient-to-br ${currentBg}`}>
+      <main className={`flex-1 min-h-screen overflow-y-auto bg-linear-to-br ${currentBg}`}>
         <Outlet />
       </main>
 

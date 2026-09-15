@@ -85,7 +85,7 @@ const AdminUsuarios = () => {
             </div>
           </div>
 
-          <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/50">
+          <div className="rounded-4xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/50">
             <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px_auto_auto_auto] items-end mb-6">
               <label className="block">
                 <span className="text-sm font-medium text-slate-700">Buscar usuario</span>
@@ -94,7 +94,7 @@ const AdminUsuarios = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Nombre, email o cédula"
-                  className="mt-2 w-full rounded-[28px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                  className="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
                 />
                 {searchError && (
                   <p className="mt-2 text-sm font-medium text-red-600">{searchError}</p>
@@ -106,7 +106,7 @@ const AdminUsuarios = () => {
                 <select
                   value={filterRole}
                   onChange={(e) => setFilterRole(e.target.value)}
-                  className="mt-2 w-full rounded-[28px] border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
+                  className="mt-2 w-full rounded-3xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-slate-400 focus:ring-2 focus:ring-slate-200"
                 >
                   {roles.map((rol) => (
                     <option key={rol} value={rol}>
@@ -122,7 +122,7 @@ const AdminUsuarios = () => {
                   setSearchTerm('');
                   setFilterRole('Todos');
                 }}
-                className="inline-flex h-14 items-center justify-center rounded-[28px] border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                className="inline-flex h-14 items-center justify-center rounded-3xl border border-slate-300 bg-white px-5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
                 Limpiar
               </button>
@@ -130,7 +130,7 @@ const AdminUsuarios = () => {
               <button
                 type="button"
                 onClick={handleCrearUsuario}
-                className="inline-flex h-14 items-center justify-center rounded-[28px] bg-[#17243D] px-5 text-sm font-semibold text-white transition hover:bg-slate-800"
+                className="inline-flex h-14 items-center justify-center rounded-3xl bg-[#17243D] px-5 text-sm font-semibold text-white transition hover:bg-slate-800"
               >
                 Nuevo Usuario
               </button>

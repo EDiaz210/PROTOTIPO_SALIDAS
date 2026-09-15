@@ -5,7 +5,7 @@ const NotFound = () => {
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6">
-      <div className="w-full max-w-xl rounded-[32px] border border-slate-200 bg-white p-8 shadow-xl">
+      <div className="w-full max-w-xl rounded-4xl border border-slate-200 bg-white p-8 shadow-xl">
         <div className="text-center">
           <p className="text-sm uppercase tracking-[0.25em] text-slate-400">404 - Página no encontrada</p>
           <h1 className="mt-4 text-5xl font-bold text-slate-900">Ups, esto no existe</h1>

@@ -214,7 +214,7 @@ const CrearUsuarioPage = () => {
           </div>
         </div>
 
-        <div className="rounded-[32px] border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/50">
+        <div className="rounded-4xl border border-slate-200 bg-white p-6 shadow-sm shadow-slate-200/50">
           <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6">
             <div className="grid gap-6 md:grid-cols-2">
               {/* Nombre */}
@@ -223,7 +223,7 @@ const CrearUsuarioPage = () => {
                 <input
                   type="text"
                   placeholder="Ej: Juan Carlos Pérez López"
-                  className={`rounded-[24px] border px-4 py-3 text-slate-900 outline-none transition focus:ring-2 ${
+                  className={`rounded-3xl border px-4 py-3 text-slate-900 outline-none transition focus:ring-2 ${
                     errors.nombre
                       ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-100'
                       : 'border-slate-200 bg-slate-50 focus:border-slate-400 focus:ring-slate-200'
@@ -242,7 +242,7 @@ const CrearUsuarioPage = () => {
                   type="text"
                   placeholder="Ej: 1234567890"
                   inputMode="numeric"
-                  className={`rounded-[24px] border px-4 py-3 text-slate-900 outline-none transition focus:ring-2 ${
+                  className={`rounded-3xl border px-4 py-3 text-slate-900 outline-none transition focus:ring-2 ${
                     errors.cedula
                       ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-100'
                       : 'border-slate-200 bg-slate-50 focus:border-slate-400 focus:ring-slate-200'
@@ -263,7 +263,7 @@ const CrearUsuarioPage = () => {
                 <input
                   type="email"
                   placeholder="usuario@farbiopharma.com"
-                  className={`rounded-[24px] border px-4 py-3 text-slate-900 outline-none transition focus:ring-2 ${
+                  className={`rounded-3xl border px-4 py-3 text-slate-900 outline-none transition focus:ring-2 ${
                     errors.email
                       ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-100'
                       : 'border-slate-200 bg-slate-50 focus:border-slate-400 focus:ring-slate-200'
@@ -282,7 +282,7 @@ const CrearUsuarioPage = () => {
               <div className="flex flex-col">
                 <label className="text-slate-800 font-semibold mb-2">Rol *</label>
                 <select
-                  className={`rounded-[24px] border px-4 py-3 text-slate-900 outline-none transition focus:ring-2 ${
+                  className={`rounded-3xl border px-4 py-3 text-slate-900 outline-none transition focus:ring-2 ${
                     errors.rol
                       ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-100'
                       : 'border-slate-200 bg-slate-50 focus:border-slate-400 focus:ring-slate-200'
@@ -307,7 +307,7 @@ const CrearUsuarioPage = () => {
                   <input
                     type={showPassword ? 'text' : 'password'}
                     placeholder="••••••••••••••"
-                    className={`w-full rounded-[24px] border px-4 py-3 pr-12 text-slate-900 outline-none transition focus:ring-2 ${
+                    className={`w-full rounded-3xl border px-4 py-3 pr-12 text-slate-900 outline-none transition focus:ring-2 ${
                       errors.password
                         ? 'border-red-400 bg-red-50 focus:border-red-500 focus:ring-red-100'
                         : 'border-slate-200 bg-slate-50 focus:border-slate-400 focus:ring-slate-200'
@@ -344,14 +344,14 @@ const CrearUsuarioPage = () => {
               <button
                 type="button"
                 onClick={handleExit}
-                className="rounded-[28px] border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                className="rounded-3xl border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
                 Cancelar
               </button>
               <button
                 type="submit"
                 disabled={enviando || isValidating}
-                className="rounded-[28px] bg-[#17243D] px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="rounded-3xl bg-[#17243D] px-6 py-3 text-sm font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {enviando ? 'Creando...' : isValidating ? 'Validando...' : 'Crear usuario'}
               </button>

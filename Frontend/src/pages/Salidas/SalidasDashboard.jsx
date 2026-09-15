@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { QrCode, CheckCircle2, Search, LoaderCircle, BadgeCheck, MapPinned, PlusCircle } from 'lucide-react';
+import { ToastContainer, toast } from 'react-toastify';
 import storeAuth from '../../context/storeAuth';
 import { getAuthClaims } from '../../utils/authClaims';
 
@@ -21,7 +22,6 @@ const SalidasDashboard = () => {
     observaciones: '',
     fecha_salida: new Date().toISOString().slice(0, 10),
   });
-  const [message, setMessage] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [qrSeleccionado, setQrSeleccionado] = useState(null);
 
@@ -79,7 +79,6 @@ const SalidasDashboard = () => {
     if (!token) return;
 
     setIsGenerating(true);
-    setMessage('');
 
     try {
       const response = await fetch(`${API}/api/salidas/create`, {
@@ -96,7 +95,7 @@ const SalidasDashboard = () => {
         throw new Error(data?.msg || 'No se pudo registrar la salida');
       }
 
-      setMessage('✅ Solicitud creada correctamente. Ahora el jefe puede aprobarla.');
+      toast.success('Solicitud creada correctamente. Ahora el jefe puede aprobarla.');
       setForm({
         area_origen: '',
         destino: '',
@@ -107,7 +106,7 @@ const SalidasDashboard = () => {
       });
       await fetchSalidas();
     } catch (error) {
-      setMessage(error.message);
+      toast.error(error.message || 'No se pudo registrar la salida.');
     } finally {
       setIsGenerating(false);
     }
@@ -127,10 +126,10 @@ const SalidasDashboard = () => {
       if (!response.ok || data?.success === false) {
         throw new Error(data?.msg || 'No se pudo aprobar');
       }
-      setMessage('✅ Salida aprobada y QR habilitado para validación');
+      toast.success('Salida aprobada y QR habilitado para validación.');
       await fetchSalidas();
     } catch (error) {
-      setMessage(error.message);
+      toast.error(error.message || 'No se pudo aprobar la salida.');
     }
   };
 
@@ -190,6 +189,7 @@ const SalidasDashboard = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8">
+      <ToastContainer position="top-right" autoClose={4000} newestOnTop closeOnClick pauseOnHover />
       <div className="mx-auto max-w-7xl space-y-6">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
@@ -258,7 +258,6 @@ const SalidasDashboard = () => {
                   {isGenerating ? 'Generando...' : 'Guardar orden'}
                 </button>
 
-                {message && <p className="text-sm text-slate-600">{message}</p>}
               </div>
             </form>
           </div>
@@ -358,7 +357,7 @@ const SalidasDashboard = () => {
 
               {qrUrl ? (
                 <div className="space-y-4">
-                  <div className="mx-auto flex w-full max-w-[260px] items-center justify-center rounded-2xl bg-white p-4 shadow-inner ring-1 ring-slate-200">
+                  <div className="mx-auto flex w-full max-w-65 items-center justify-center rounded-2xl bg-white p-4 shadow-inner ring-1 ring-slate-200">
                     <img
                       src={`https://api.qrserver.com/v1/create-qr-code/?size=360x360&margin=2&ecc=H&data=${encodeURIComponent(String(qrSeleccionado.qr_payload || JSON.stringify(qrUrl)))}`}
                       alt="QR de salida"

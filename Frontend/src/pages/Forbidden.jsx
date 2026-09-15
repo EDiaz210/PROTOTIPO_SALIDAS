@@ -4,7 +4,7 @@ export const Forbidden = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-red-50 to-red-100" style={{ fontFamily: 'Gowun Batang, serif' }}>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-linear-to-br from-red-50 to-red-100" style={{ fontFamily: 'Gowun Batang, serif' }}>
       <div className="text-center">
         <h1 className="text-6xl font-bold text-red-600 mb-4">403</h1>
         <h2 className="text-3xl font-semibold text-slate-900 mb-2">Acceso Denegado</h2>
