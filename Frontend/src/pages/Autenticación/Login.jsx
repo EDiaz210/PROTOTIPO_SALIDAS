@@ -71,15 +71,15 @@ const Login = () => {
     <div className="flex min-h-screen flex-col overflow-hidden bg-white sm:flex-row" style={{ fontFamily: 'Gowun Batang, serif' }}>
       <ToastContainer />
 
-      <div className="relative hidden min-h-screen overflow-hidden bg-[#dce3ea] sm:block sm:w-1/2 lg:w-7/12">
+      <div className="relative hidden min-h-screen overflow-hidden bg-[#eef5fc] sm:block sm:w-1/2 lg:w-7/12">
         <img
           src="/fondo-login.jpg"
           alt="Laboratorio Farbiopharma"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-left"
         />
-        <div className="absolute inset-0 bg-[#17243D]/55" />
+        <div className="absolute inset-0 bg-[#17243D]/20" />
         <div className="absolute bottom-12 left-12 max-w-sm text-white">
-          <p className="mb-3 text-xs uppercase tracking-[0.3em] text-white/70">Farbiopharma</p>
+          <p className="mb-3 text-xs uppercase tracking-[0.3em] text-white/70">Navew</p>
           <p className="text-3xl leading-tight">Gestión simple para cada proceso.</p>
         </div>
       </div>
