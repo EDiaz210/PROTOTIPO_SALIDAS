@@ -11,7 +11,7 @@ const ensureSalidasTable = async () => {
       solicitante_cedula VARCHAR(20) DEFAULT NULL,
       area_origen VARCHAR(120) NOT NULL,
       destino VARCHAR(150) NOT NULL,
-      sede VARCHAR(150) NOT NULL,
+      departamento VARCHAR(150) NOT NULL,
       motivo TEXT NOT NULL,
       observaciones TEXT DEFAULT NULL,
       fecha_salida DATE NOT NULL,
@@ -32,6 +32,18 @@ const ensureSalidasTable = async () => {
   `;
 
   await pool.query(query);
+
+  const [legacyColumn] = await pool.query(`
+    SELECT COUNT(*) AS total
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'salidas'
+      AND COLUMN_NAME = 'sede'
+  `);
+
+  if (Number(legacyColumn?.[0]?.total || 0) > 0) {
+    await pool.query('ALTER TABLE salidas CHANGE COLUMN sede departamento VARCHAR(150) NOT NULL');
+  }
 };
 
 const buildQrPayload = (salida) => {
@@ -43,7 +55,7 @@ const buildQrPayload = (salida) => {
     String(salida.solicitante_cedula ?? ''),
     String(salida.area_origen ?? ''),
     String(salida.destino ?? ''),
-    String(salida.sede ?? ''),
+    String(salida.departamento ?? ''),
     String(salida.motivo ?? ''),
     String(salida.fecha_salida ?? ''),
     String(salida.estado ?? 'pendiente'),
@@ -79,14 +91,14 @@ const createSalida = async (req, res) => {
   const {
     area_origen,
     destino,
-    sede,
+    departamento,
     motivo,
     observaciones,
     fecha_salida,
   } = req.body;
 
-  if (!area_origen || !destino || !sede || !motivo || !fecha_salida) {
-    return res.status(400).json({ success: false, msg: 'Debe completar área de origen, destino, sede, motivo y fecha de salida' });
+  if (!area_origen || !destino || !departamento || !motivo || !fecha_salida) {
+    return res.status(400).json({ success: false, msg: 'Debe completar área de origen, destino, departamento, motivo y fecha de salida' });
   }
 
   try {
@@ -99,7 +111,7 @@ const createSalida = async (req, res) => {
         solicitante_cedula,
         area_origen,
         destino,
-        sede,
+        departamento,
         motivo,
         observaciones,
         fecha_salida,
@@ -115,7 +127,7 @@ const createSalida = async (req, res) => {
       cedula,
       area_origen,
       destino,
-      sede,
+      departamento,
       motivo,
       fecha_salida,
       estado: 'pendiente',
@@ -129,7 +141,7 @@ const createSalida = async (req, res) => {
       cedula,
       area_origen,
       destino,
-      sede,
+      departamento,
       motivo,
       observaciones || null,
       fecha_salida,
@@ -248,7 +260,7 @@ const parseQrPayload = (rawPayload) => {
       cedula: parts[4],
       area_origen: parts[5],
       destino: parts[6],
-      sede: parts[7],
+      departamento: parts[7],
       motivo: parts[8],
       fecha_salida: parts[9],
       estado: parts[10],
@@ -266,7 +278,7 @@ const validateQrSalida = async (req, res) => {
   }
 
   try {
-    const { codigo, area_origen, destino, sede, motivo, fecha_salida, solicitante } = req.body || {};
+    const { codigo, area_origen, destino, departamento, motivo, fecha_salida, solicitante } = req.body || {};
 
     if (!codigo) {
       return res.status(400).json({ success: false, msg: 'Falta el código de la salida' });
@@ -284,7 +296,7 @@ const validateQrSalida = async (req, res) => {
       codigo: salida.codigo,
       area_origen: salida.area_origen,
       destino: salida.destino,
-      sede: salida.sede,
+      departamento: salida.departamento,
       motivo: salida.motivo,
       fecha_salida: salida.fecha_salida,
       solicitante: salida.solicitante_nombre,
@@ -295,7 +307,7 @@ const validateQrSalida = async (req, res) => {
       codigo: codigo || payload.codigo,
       area_origen: area_origen || payload.area_origen,
       destino: destino || payload.destino,
-      sede: sede || payload.sede,
+      departamento: departamento || payload.departamento,
       motivo: motivo || payload.motivo,
       fecha_salida: fecha_salida || payload.fecha_salida,
       solicitante: solicitante || payload.solicitante,
@@ -337,7 +349,7 @@ const validateQrSalida = async (req, res) => {
       solicitante_nombre: salidaEntregada.solicitante_nombre,
       area_origen: salidaEntregada.area_origen,
       destino: salidaEntregada.destino,
-      sede: salidaEntregada.sede,
+      departamento: salidaEntregada.departamento,
       motivo: salidaEntregada.motivo,
       fecha_salida: salidaEntregada.fecha_salida,
     });

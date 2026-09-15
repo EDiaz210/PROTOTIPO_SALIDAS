@@ -17,7 +17,7 @@ const SalidasDashboard = () => {
   const [form, setForm] = useState({
     area_origen: '',
     destino: '',
-    sede: '',
+    departamento: '',
     motivo: '',
     observaciones: '',
     fecha_salida: new Date().toISOString().slice(0, 10),
@@ -99,7 +99,7 @@ const SalidasDashboard = () => {
       setForm({
         area_origen: '',
         destino: '',
-        sede: '',
+        departamento: '',
         motivo: '',
         observaciones: '',
         fecha_salida: new Date().toISOString().slice(0, 10),
@@ -173,7 +173,7 @@ const SalidasDashboard = () => {
           cedula: parts[4],
           area_origen: parts[5],
           destino: parts[6],
-          sede: parts[7],
+          departamento: parts[7],
           motivo: parts[8],
           fecha_salida: parts[9],
           estado: parts[10],
@@ -224,17 +224,17 @@ const SalidasDashboard = () => {
             <form onSubmit={handleSubmit} className="grid gap-4 md:grid-cols-2">
               <label className="space-y-2 md:col-span-1">
                 <span className="text-sm font-medium text-slate-700">Área de origen</span>
-                <input name="area_origen" value={form.area_origen} onChange={handleChange} required className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 outline-none focus:border-[#3d5a80]" placeholder="Planta Central" />
+                <input name="area_origen" value={form.area_origen} onChange={handleChange} required className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 outline-none focus:border-[#3d5a80]" placeholder="Ingrese la planta de origen" />
               </label>
 
               <label className="space-y-2 md:col-span-1">
                 <span className="text-sm font-medium text-slate-700">Destino</span>
-                <input name="destino" value={form.destino} onChange={handleChange} required className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 outline-none focus:border-[#3d5a80]" placeholder="Oficina Carmen" />
+                <input name="destino" value={form.destino} onChange={handleChange} required className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 outline-none focus:border-[#3d5a80]" placeholder="Ingrese la planta de destino" />
               </label>
 
               <label className="space-y-2 md:col-span-1">
-                <span className="text-sm font-medium text-slate-700">Sede</span>
-                <input name="sede" value={form.sede} onChange={handleChange} required className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 outline-none focus:border-[#3d5a80]" placeholder="Sede principal" />
+                <span className="text-sm font-medium text-slate-700">Departamento</span>
+                <input name="departamento" value={form.departamento} onChange={handleChange} required className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 outline-none focus:border-[#3d5a80]" placeholder="Ingrese el departamento" />
               </label>
 
               <label className="space-y-2 md:col-span-1">
@@ -366,7 +366,7 @@ const SalidasDashboard = () => {
                   </div>
                   <div className="text-center text-sm text-slate-600">
                     <p className="font-semibold text-slate-900">{qrSeleccionado.destino}</p>
-                    <p>{qrSeleccionado.sede}</p>
+                    <p>{qrSeleccionado.departamento}</p>
                     <p className="mt-2 text-xs text-slate-500">{qrSeleccionado.motivo}</p>
                   </div>
                 </div>

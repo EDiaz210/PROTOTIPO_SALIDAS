@@ -19,7 +19,7 @@ export const notificarLlegadaPedido = async (salida = {}) => {
 📦 <b>Código:</b> <code>${salida.codigo || 'N/A'}</code>
 📍 <b>Origen:</b> ${salida.area_origen || 'N/A'}
 🏬 <b>Destino:</b> ${salida.destino || 'N/A'}
-📌 <b>Sede:</b> ${salida.sede || 'N/A'}
+📌 <b>Departamento:</b> ${salida.departamento || 'N/A'}
 🧾 <b>Motivo:</b> ${salida.motivo || 'N/A'}
 📅 <b>Fecha salida:</b> ${salida.fecha_salida || 'N/A'}
 

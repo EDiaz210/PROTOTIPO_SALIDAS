@@ -208,7 +208,7 @@ const ValidarSalidaQR = () => {
                     solicitante: parts[3],
                     area_origen: parts[5],
                     destino: parts[6],
-                    sede: parts[7],
+                    departamento: parts[7],
                     motivo: parts[8],
                     fecha_salida: parts[9],
                     estado: parts[10],
@@ -220,7 +220,7 @@ const ValidarSalidaQR = () => {
                 codigo: parsed.codigo || parsed.id || parsed.data || raw,
                 area_origen: parsed.area_origen,
                 destino: parsed.destino,
-                sede: parsed.sede,
+                departamento: parsed.departamento,
                 motivo: parsed.motivo,
                 fecha_salida: parsed.fecha_salida,
                 solicitante: parsed.solicitante,
@@ -314,7 +314,7 @@ const ValidarSalidaQR = () => {
             <h1 className="text-3xl font-bold text-slate-900">Validación de salida aprobada</h1>
             <div className="mt-3 space-y-1 text-slate-600">
               <p className="text-base font-medium text-slate-700">Escanea el QR generado por la salida aprobada</p>
-              <p className="text-sm">El sistema valida que los datos de origen, destino, sede, motivo y aprobador coincidan con lo registrado.</p>
+              <p className="text-sm">El sistema valida que los datos de origen, destino, departamento, motivo y aprobador coincidan con lo registrado.</p>
             </div>
           </div>
         </div>
@@ -441,8 +441,8 @@ const ValidarSalidaQR = () => {
                             <strong className="text-right text-slate-900">{result.salida.destino}</strong>
                           </div>
                           <div className="grid grid-cols-[120px_1fr] items-center gap-4">
-                            <span className="font-medium text-slate-600">Sede:</span>
-                            <strong className="text-right text-slate-900">{result.salida.sede}</strong>
+                            <span className="font-medium text-slate-600">Departamento:</span>
+                            <strong className="text-right text-slate-900">{result.salida.departamento}</strong>
                           </div>
                           <div className="grid grid-cols-[120px_1fr] items-center gap-4">
                             <span className="font-medium text-slate-600">Estado:</span>
